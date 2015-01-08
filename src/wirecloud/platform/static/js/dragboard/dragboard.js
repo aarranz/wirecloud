@@ -1,5 +1,5 @@
 /*
- *     Copyright (c) 2008-2014 CoNWeT Lab., Universidad Politécnica de Madrid
+ *     Copyright (c) 2008-2015 CoNWeT Lab., Universidad Politécnica de Madrid
  *
  *     This file is part of Wirecloud Platform.
  *
@@ -227,13 +227,11 @@
          *
          * @param widget the widget to use for creating the instance
          */
-        Dragboard.prototype.addInstance = function addInstance(widget, options_) {
-            var options = {
+        Dragboard.prototype.addInstance = function addInstance(widget, options) {
+            options = Wirecloud.Utils.merge({
                 "iwidgetName": widget.title,
                 "setDefaultValues" : function () {}
-            };
-
-            Wirecloud.Utils.merge(options, options_);
+            }, options);
 
             if (!(widget instanceof Wirecloud.Widget)) {
                 throw new TypeError();
