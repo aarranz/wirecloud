@@ -47,6 +47,7 @@
     });
     Object.freeze(Wirecloud.events);
     Wirecloud.addEventListener = StyledElements.ObjectWithEvents.prototype.addEventListener;
+    Wirecloud.clearEventListeners = StyledElements.ObjectWithEvents.prototype.clearEventListeners;
     Wirecloud.dispatchEvent = StyledElements.ObjectWithEvents.prototype.dispatchEvent;
 
     var onCreateWorkspaceSuccess = function onCreateWorkspaceSuccess(response) {
