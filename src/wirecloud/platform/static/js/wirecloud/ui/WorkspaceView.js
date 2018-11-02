@@ -218,7 +218,7 @@
         this.walletButton.active = false;
 
         this.notebook = new StyledElements.Notebook({
-            'class': 'se-notebook-bottom'
+            'class': 'se-notebook-top'
         });
         this.layout.slideOut().content.clear();
         this.notebook.appendTo(this.layout.content);
@@ -466,8 +466,11 @@
         var widget = this.findWidget(id);
 
         if (widget !== null) {
-            widget.tab.dragboard.raiseToTop(widget);
-            widget.highlight().tab.highlight();
+            //widget.tab.dragboard.raiseToTop(widget);
+            //widget.highlight().tab.highlight();
+            if (widget.layout instanceof Wirecloud.ui.SidebarLayout) {
+                widget.layout.active = true;
+            }
         }
 
         return this;
