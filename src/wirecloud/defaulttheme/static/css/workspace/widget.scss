@@ -7,7 +7,7 @@
 
 .wc-widget {
     position: absolute;
-    transition: opacity 0.35s ease-in, top 0.2s ease-in, left 0.2s ease-in, width 0.2s ease-in, height 0.2s ease-in, box-shadow 0.7s ease-in;
+    transition: opacity 0.35s ease-in, top 0.2s ease-in, left 0.2s ease-in, right 0.2s ease-in, width 0.2s ease-in, height 0.2s ease-in, box-shadow 0.7s ease-in;
     overflow: visible;
     @include z-depth(1);
     box-sizing: border-box;
@@ -33,6 +33,11 @@
     cursor: grab;
     position: relative;
     flex-grow: 0;
+    display: none;
+
+    .wc-workspace-editing & {
+        display: block;
+    }
 
     & > span {
         display: inline-block;
@@ -97,12 +102,17 @@
     padding: 0 32px;
     position: static;
     flex-grow: 0;
+    display: none;
 
     @if ($widget-footer-bg == 'transparent') {
         color: contrast-color($body-bg, $text-color-light, $text-color-dark, $text-color-threshold);
     } @else {
         color: contrast-color($widget-footer-bg, $text-color-light, $text-color-dark, $text-color-threshold);
         background: $widget-footer-bg;
+    }
+
+    .wc-workspace-editing & {
+        display: block;
     }
 }
 
@@ -154,7 +164,12 @@
 
 .wc-widget-fulldragboard {
 
-    position: fixed;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+
+    @include z-depth(0);
     border: 0px none;
 
     & > .wc-widget-footer {

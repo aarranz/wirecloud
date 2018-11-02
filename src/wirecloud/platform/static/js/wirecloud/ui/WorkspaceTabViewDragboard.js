@@ -50,6 +50,8 @@
         this.baseLayout = this._buildLayoutFromPreferences();
         this.freeLayout = new Wirecloud.ui.FreeLayout(this);
         this.fulldragboardLayout = new Wirecloud.ui.FullDragboardLayout(this);
+        this.leftLayout = new Wirecloud.ui.SidebarLayout(this);
+        this.rightLayout = new Wirecloud.ui.SidebarLayout(this, {position: "right"});
 
         if (this.tab.workspace.restricted) {
             this.tab.wrapperElement.classList.add("fixed");
@@ -181,40 +183,44 @@
         this.painted = true;
     };
 
+    /**
+     *
+     */
     WorkspaceTabViewDragboard.prototype.update = function update(ids) {
-        return new Promise(function (resolve, reject) {
-            var url = Wirecloud.URLs.IWIDGET_COLLECTION.evaluate({
-                workspace_id: this.tab.workspace.model.id,
-                tab_id: this.tab.model.id
-            });
+        if (this.tab.workspace.editing == false) {
+            return Promise.resolve(this);
+        }
 
-            ids = ids || Object.keys(this.tab.widgetsById);
+        var url = Wirecloud.URLs.IWIDGET_COLLECTION.evaluate({
+            workspace_id: this.tab.workspace.model.id,
+            tab_id: this.tab.model.id
+        });
 
-            var content = this.widgets.filter(function (widget) {
-                return !widget.model.volatile && ids.indexOf(widget.id) !== -1;
-            });
+        ids = ids || Object.keys(this.tab.widgetsById);
 
-            if (!content.length) {
-                return resolve(this);
+        var content = this.widgets.filter(function (widget) {
+            return !widget.model.volatile && ids.indexOf(widget.id) !== -1;
+        });
+
+        if (!content.length) {
+            return Promise.resolve(this);
+        }
+
+        return Wirecloud.io.makeRequest(url, {
+            method: 'PUT',
+            requestHeaders: {'Accept': 'application/json'},
+            contentType: 'application/json',
+            postBody: JSON.stringify(content)
+        }).then((response) => {
+            if (response.status === 204) {
+                this.widgets.filter(function (widget) {
+                    widget.persist();
+                });
+                return Promise.resolve(this);
+            } else {
+                return Promise.reject(/* TODO */);
             }
-
-            Wirecloud.io.makeRequest(url, {
-                method: 'PUT',
-                requestHeaders: {'Accept': 'application/json'},
-                contentType: 'application/json',
-                postBody: JSON.stringify(content),
-                onComplete: function (response) {
-                    if (response.status === 204) {
-                        this.widgets.filter(function (widget) {
-                            widget.persist();
-                        });
-                        resolve(this);
-                    } else {
-                        reject(/* TODO */);
-                    }
-                }.bind(this)
-            });
-        }.bind(this));
+        });
     };
 
     // =========================================================================
@@ -357,6 +363,8 @@
         this.baseLayout._notifyWindowResizeEvent(widthChanged, heightChanged);
         this.freeLayout._notifyWindowResizeEvent(widthChanged, heightChanged);
         this.fulldragboardLayout._notifyWindowResizeEvent(widthChanged, heightChanged);
+        this.leftLayout._notifyWindowResizeEvent(widthChanged, heightChanged);
+        this.rightLayout._notifyWindowResizeEvent(widthChanged, heightChanged);
     };
 
     ns.WorkspaceTabViewDragboard = WorkspaceTabViewDragboard;

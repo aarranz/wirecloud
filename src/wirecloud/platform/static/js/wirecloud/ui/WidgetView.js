@@ -223,7 +223,27 @@
         this.heading = this.wrapperElement.getElementsByClassName('wc-widget-heading')[0];
 
         // TODO: review
-        var layout = model.layout === 0 ? tab.dragboard.baseLayout : tab.dragboard.freeLayout;
+        var layout;
+        if (model.fulldragboard) {
+            layout = tab.dragboard.fulldragboardLayout;
+            this.previousLayout = model.layout === 0 ? tab.dragboard.baseLayout : tab.dragboard.freeLayout;
+            this.previousPosition = model.position;
+        } else {
+            switch (model.layout) {
+            case 0:
+                layout = tab.dragboard.baseLayout;
+                break;
+            case 1:
+                layout = tab.dragboard.freeLayout;
+                break;
+            case 2:
+                layout = tab.dragboard.leftLayout;
+                break;
+            case 3:
+                layout = tab.dragboard.rightLayout;
+                break;
+            }
+        }
         layout.addWidget(this, true);
 
         this.setMinimizeStatus(model.minimized, false, true);
@@ -490,10 +510,11 @@
                 this.previousPosition = this.position;
 
                 this.moveToLayout(dragboard.fulldragboardLayout);
-                dragboard.raiseToTop(this);
+                dragboard.lowerToBottom(this);
             } else {
                 this.moveToLayout(this.previousLayout);
             }
+            this.model.fulldragboard = enable;
         },
 
         toggleLayout: function toggleLayout() {
@@ -527,6 +548,11 @@
                 data.height = privates.get(this).shape.height;
                 data.fulldragboard = false;
             } else {
+                data.top = this.previousPosition.y;
+                data.left = this.previousPosition.x;
+                data.zIndex = this.previousPosition.z;
+                data.width = this.previousShape.width;
+                data.height = this.previousShape.height;
                 data.fulldragboard = true;
             }
 
@@ -575,14 +601,24 @@
     };
 
     var update_position = function update_position() {
-        this.wrapperElement.style.left = this.layout.getColumnOffset(this.position.x) + "px";
-        this.wrapperElement.style.top = this.layout.getRowOffset(this.position.y) + "px";
+        this.layout.updatePosition(this, this.wrapperElement);
         this.wrapperElement.style.zIndex = this.position.z + 1;
     };
 
     var update_shape = function update_shape() {
-        this.wrapperElement.style.width = this.layout.getWidthInPixels(this.shape.width) + 'px';
-        this.wrapperElement.style.height = this.minimized ? "" : this.layout.getHeightInPixels(this.shape.height) + 'px';
+        let width = this.layout.getWidthInPixels(this.shape.width);
+        if (width != null) {
+            this.wrapperElement.style.width = width + 'px';
+        } else {
+            this.wrapperElement.style.width = "";
+        }
+
+        let height = this.minimized ? null : this.layout.getHeightInPixels(this.shape.height);
+        if (height != null) {
+            this.wrapperElement.style.height = height + 'px';
+        } else {
+            this.wrapperElement.style.height = "";
+        }
     };
 
     var notify_position = function notify_position() {

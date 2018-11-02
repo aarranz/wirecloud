@@ -126,10 +126,10 @@
             var button = new se.PopupButton({
                 title: utils.gettext("Preferences"),
                 class: 'icon-tab-menu',
-                iconClass: 'fa fa-caret-up',
+                iconClass: 'fa fa-caret-down',
                 plain: true,
                 menuOptions: {
-                    position: ['top-left', 'top-right']
+                    position: ['bottom-left', 'bottom-right']
                 }
             });
             button.popup_menu.append(new ns.WorkspaceTabViewMenuItems(this));
@@ -176,7 +176,17 @@
                 width: resource.default_width
             }, options);
 
-            layout = options.layout === 1 ? this.dragboard.freeLayout : this.dragboard.baseLayout;
+            switch (options.layout) {
+            case 0:
+                layout = this.dragboard.baseLayout;
+                break;
+            case 1:
+                layout = this.dragboard.freeLayout;
+                break;
+            case 2:
+                layout = this.dragboard.leftLayout;
+                break;
+            }
 
             options.left = options.left != null ? layout.adaptColumnOffset(options.left).inLU : undefined;
             options.top = options.top != null ? layout.adaptRowOffset(options.top).inLU : undefined;
