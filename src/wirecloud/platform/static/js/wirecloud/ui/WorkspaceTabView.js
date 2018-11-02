@@ -127,10 +127,10 @@
             this.prefbutton = new se.PopupButton({
                 title: utils.gettext("Preferences"),
                 class: 'icon-tab-menu',
-                iconClass: 'fa fa-caret-up',
+                iconClass: 'fa fa-caret-down',
                 plain: true,
                 menuOptions: {
-                    position: ['top-left', 'top-right']
+                    position: ['bottom-left', 'bottom-right']
                 }
             });
             this.prefbutton.popup_menu.append(new ns.WorkspaceTabViewMenuItems(this));

@@ -62,7 +62,7 @@
 
         this.handle = document.createElement("div");
         this.handleicon = document.createElement("i");
-        this.handleicon.className = "fas fa-caret-" + OPPOSITE[this.position];
+        this.handleicon.className = "fa-fw fas fa-" + (this.position === "right" ? "caret-left" : "search");
         this.handle.appendChild(this.handleicon);
         this.handle.addEventListener("click", () => {
             this.active = !this.active;
@@ -154,8 +154,12 @@
 
         privates.get(this).active = newstatus;
 
-        let position = this.active ? this.position : OPPOSITE[this.position];
-        this.handleicon.className = "fas fa-caret-" + position;
+        if (this.position === "left") {
+            this.handleicon.className = "fa-fw fas fa-search";
+        } else {
+            let position = this.active ? this.position : OPPOSITE[this.position];
+            this.handleicon.className = "fa-fw fas fa-caret-" + position;
+        }
 
         this._notifyWindowResizeEvent(true, true);
     };
