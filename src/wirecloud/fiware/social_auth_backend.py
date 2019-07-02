@@ -123,6 +123,7 @@ class FIWAREOAuth2(BaseOAuth2):
             'fullname': name,
             'first_name': first_name,
             'last_name': last_name,
+            'groups': tuple(rol['name'].strip().lower() for rol in response.get("roles", [])),
             'is_superuser': superuser,
             'is_staff': superuser,
         }
