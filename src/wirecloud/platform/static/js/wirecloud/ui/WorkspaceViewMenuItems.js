@@ -72,6 +72,7 @@
                 (new Wirecloud.ui.SharingWindowMenu(this)).show();
             }.bind(this.workspace));
             item.addIconClass("fa fa-share");
+            item.setDisabled(!this.workspace.editing || !this.workspace.model.isAllowed('edit'));
             items.push(item);
 
             item = new se.MenuItem(utils.gettext("Upload to my resources"), function () {
