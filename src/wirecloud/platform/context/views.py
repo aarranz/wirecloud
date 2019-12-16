@@ -20,6 +20,7 @@
 import json
 
 from django.http import HttpResponse
+from django.utils.translation import check_for_language
 
 from wirecloud.commons.utils.encoding import LazyEncoder
 from wirecloud.commons.baseviews import Resource
@@ -34,6 +35,9 @@ class PlatformContextCollection(Resource):
             'platform': get_platform_context(request.user, session=request.session),
             'workspace': get_workspace_context_definitions()
         }
+
+        if 'lang' in request.GET and check_for_language(request.GET['lang']):
+            context['platform']['language']['value'] = request.GET['lang']
 
         if 'theme' in request.GET:
             context['platform']['theme']['value'] = request.GET['theme']

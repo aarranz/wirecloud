@@ -23,6 +23,7 @@ from django.http import Http404, HttpResponse
 from django.template import TemplateDoesNotExist
 from django.template.loader import get_template
 from django.utils.decorators import method_decorator
+from django.utils.translation import activate, check_for_language
 from django.views.decorators.cache import cache_page
 
 from wirecloud.commons.baseviews.resource import Resource
@@ -55,6 +56,9 @@ class ThemeEntry(Resource):
 
     @method_decorator(cache_page(60 * 60 * 24 * 365))
     def read(self, request, name):
+
+        if 'lang' in request.GET and check_for_language(request.GET['lang']):
+            activate(request.GET['lang'])
 
         try:
             theme_info = get_theme_metadata(name)
