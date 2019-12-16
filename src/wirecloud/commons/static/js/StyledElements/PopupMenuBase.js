@@ -62,7 +62,7 @@
             this.wrapperElement.style.top = (refPosition.top - 1) + "px";
             break;
         case 'top-left':
-            this.wrapperElement.style.top = (refPosition.top - this.wrapperElement.offsetHeight + 1) + "px";
+            this.wrapperElement.style.bottom = (this.wrapperElement.parentElement.offsetHeight - refPosition.top - 1) + "px";
             this.wrapperElement.style.left = refPosition.left + "px";
             break;
         case 'top-right':
