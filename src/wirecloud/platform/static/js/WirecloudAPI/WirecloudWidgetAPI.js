@@ -50,28 +50,38 @@
 
     // Widget module
     Object.defineProperty(window.MashupPlatform, 'widget', {value: {}});
-    Object.defineProperty(window.MashupPlatform.widget, 'id', {value: MashupPlatform.priv.id});
-    Object.defineProperty(window.MashupPlatform.widget, 'getVariable', {
-        value: function getVariable(name) {
-            var variable = model.properties[name];
-            if (variable != null) {
-                return new IWidgetVariable(variable);
+    Object.defineProperties(window.MashupPlatform.widget, {
+        id: {
+            value: MashupPlatform.priv.id
+        },
+        getVariable: {
+            value: function getVariable(name) {
+                var variable = model.properties[name];
+                if (variable != null) {
+                    return new IWidgetVariable(variable);
+                }
+            }
+        },
+        drawAttention: {
+            value: function drawAttention() {
+                view.tab.workspace.drawAttention(model.id);
+            }
+        },
+        close: {
+            value: function close() {
+                model.remove();
+            }
+        },
+        context: {
+            value: {}
+        },
+        log: {
+            value: function log(msg, level) {
+                model.logManager.log(msg, level);
             }
         }
     });
 
-    Object.defineProperty(window.MashupPlatform.widget, 'drawAttention', {
-        value: function drawAttention() {
-            view.tab.workspace.drawAttention(model.id);
-        }
-    });
-
-    Object.defineProperty(window.MashupPlatform.widget, 'context', {value: {}});
-    Object.defineProperty(window.MashupPlatform.widget, 'log', {
-        value: function log(msg, level) {
-            model.logManager.log(msg, level);
-        }
-    });
     Object.defineProperty(window.MashupPlatform.widget.context, 'getAvailableContext', {
         value: function getAvailableContext() {
             return model.contextManager.getAvailableContext();
