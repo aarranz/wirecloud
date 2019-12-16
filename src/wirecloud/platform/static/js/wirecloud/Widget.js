@@ -81,12 +81,17 @@
 
         privates.set(this, {
             position: {
+                anchor: data.anchor,
+                relx: typeof data.relx === "boolean" ? data.relx : true,
+                rely: typeof data.rely === "boolean" ? data.rely : false,
                 x: data.left,
                 y: data.top,
                 z: data.zIndex
             },
             meta: meta,
             shape: {
+                relheight: data.relheight != null ? data.relheight : false,
+                relwidth: data.relwidth != null ? data.relwidth : true,
                 width: data.width,
                 height: data.height
             },

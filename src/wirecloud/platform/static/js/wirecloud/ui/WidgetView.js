@@ -246,6 +246,8 @@
         });
 
         this.heading = this.wrapperElement.getElementsByClassName('wc-widget-heading')[0];
+        this.draggable = new Wirecloud.ui.WidgetViewDraggable(this);
+
 
         // TODO: review
         var layout;
@@ -271,9 +273,6 @@
             }
         }
         layout.addWidget(this, true);
-
-        // Mark as draggable
-        this.draggable = new Wirecloud.ui.WidgetViewDraggable(this);
 
         // Init minimized and title visibility options
         this.setMinimizeStatus(model.minimized, false, true);
@@ -696,19 +695,7 @@
     };
 
     var update_shape = function update_shape() {
-        let width = this.layout.getWidthInPixels(this.shape.width);
-        if (width != null) {
-            this.wrapperElement.style.width = width + 'px';
-        } else {
-            this.wrapperElement.style.width = "";
-        }
-
-        let height = this.minimized ? null : this.layout.getHeightInPixels(this.shape.height);
-        if (height != null) {
-            this.wrapperElement.style.height = height + 'px';
-        } else {
-            this.wrapperElement.style.height = "";
-        }
+        this.layout.updateShape(this, this.wrapperElement);
     };
 
     var notify_position = function notify_position() {
