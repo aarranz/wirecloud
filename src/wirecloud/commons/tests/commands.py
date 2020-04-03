@@ -82,3 +82,15 @@ class CreateOrganizationCommandTestCase(TestCase):
         self.assertEqual(self.options['stdout'].read(), '')
         self.options['stderr'].seek(0)
         self.assertEqual(self.options['stderr'].read(), '')
+
+    @patch('wirecloud.commons.management.commands.createorganization.Organization.objects.is_available', return_value=True)
+    @patch('wirecloud.commons.management.commands.createorganization.Organization.objects.create_organization')
+    def test_createorganization_command_individual_index_unknown_locale_env(self, is_available_mock, create_organization_mock, getdefaultlocale_mock):
+        getdefaultlocale_mock.side_effect = ValueError
+        call_command('createorganization', 'org')
+        create_organization_mock.assert_called_with('org')
+
+        self.options['stdout'].seek(0)
+        self.assertEqual(self.options['stdout'].read(), '')
+        self.options['stderr'].seek(0)
+        self.assertEqual(self.options['stderr'].read(), '')

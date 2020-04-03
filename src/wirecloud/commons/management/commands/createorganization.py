@@ -52,7 +52,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             default_locale = locale.getdefaultlocale()[0][:2]
-        except TypeError:
+        except (TypeError, ValueError):
             default_locale = None
 
         with override(default_locale):

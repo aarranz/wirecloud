@@ -95,7 +95,7 @@ class Command(BaseCommand):
             try:
                 f = open(file_name, 'rb')
                 wgt_file = WgtFile(f)
-            except:
+            except Exception:
                 self.log(_('Failed to read from %(file_name)s') % {'file_name': file_name}, level=1)
                 continue
 
@@ -110,13 +110,13 @@ class Command(BaseCommand):
                 wgt_file.close()
                 f.close()
                 self.log(_('Successfully imported \"%(name)s\" from \"%(file_name)s\"') % {'name': template.get_resource_processed_info()['title'], 'file_name': file_name}, level=1)
-            except:
+            except Exception:
                 self.log(_('Failed to import the mashable application component from %(file_name)s') % {'file_name': file_name}, level=1)
 
     def handle(self, *args, **options):
         try:
             default_locale = locale.getdefaultlocale()[0][:2]
-        except TypeError:
+        except (TypeError, ValueError):
             default_locale = None
 
         with override(default_locale):

@@ -266,7 +266,17 @@ class AddToCatalogueCommandTestCase(TestCase):
         getdefaultlocale_mock.side_effect = TypeError
         self.check_addtocatalogue_command_error_reading_file()
 
+    def test_addtocatalogue_command_error_reading_file_unknown_locale_env(self, getdefaultlocale_mock):
+
+        getdefaultlocale_mock.side_effect = ValueError
+        self.check_addtocatalogue_command_error_reading_file()
+
     def test_addtocatalogue_command_simplewgt_public_broken_locale_env(self, getdefaultlocale_mock):
 
         getdefaultlocale_mock.side_effect = TypeError
+        self.check_addtocatalogue_command_simplewgt_public()
+
+    def test_addtocatalogue_command_simplewgt_public_unknown_locale_env(self, getdefaultlocale_mock):
+
+        getdefaultlocale_mock.side_effect = ValueError
         self.check_addtocatalogue_command_simplewgt_public()

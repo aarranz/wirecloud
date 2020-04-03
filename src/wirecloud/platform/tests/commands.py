@@ -91,6 +91,11 @@ class PopuplateCommandTestCase(WirecloudTestCase, TransactionTestCase):
         getdefaultlocale_mock.side_effect = TypeError
         self.check_populate_command_empty_db()
 
+    def test_populate_command_empty_db_unknown_locale_env(self, getdefaultlocale_mock):
+
+        getdefaultlocale_mock.side_effect = ValueError
+        self.check_populate_command_empty_db()
+
     def check_populate_command_is_idempotent(self):
 
         args = []
