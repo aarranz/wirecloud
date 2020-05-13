@@ -289,6 +289,15 @@
                 items.push(item);
             }
 
+            if (this.widget.layout !== this.widget.tab.dragboard.bottomLayout) {
+                item = new se.MenuItem(utils.gettext("Move to the bottom sidebar"), () => {
+                    this.widget.moveToLayout(this.widget.tab.dragboard.bottomLayout);
+                });
+                item.addIconClass("fas fa-caret-square-down")
+                    .setDisabled(!this.widget.model.isAllowed('move', 'editor'));
+                items.push(item);
+            }
+
             return items;
         }
 

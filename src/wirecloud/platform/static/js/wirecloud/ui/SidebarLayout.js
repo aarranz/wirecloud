@@ -26,14 +26,27 @@
 
     "use strict";
 
-    const OPPOSITE = {
+    const ICON = Object.freeze({
+        "right": "right",
+        "left": "left",
+        "top": "up",
+        "bottom": "down"
+    });
+    const OPPOSITE = Object.freeze({
         "right": "left",
-        "left": "right"
-    };
+        "left": "right",
+        "bottom": "up",
+        "top": "down"
+    });
+    const POSITIONS = Object.freeze(["top", "right", "bottom", "left"]);
 
     Wirecloud.ui.SidebarLayout = class SidebarLayout extends Wirecloud.ui.SmartColumnLayout {
 
         constructor(dragboard, options) {
+            options = utils.merge({
+                position: "left"
+            }, options);
+
             super(
                 dragboard,
                 1,
@@ -43,9 +56,9 @@
                 12
             );
 
-            options = utils.merge({
-                position: "left"
-            }, options);
+            if (POSITIONS.indexOf(options.position) === -1) {
+                throw new TypeError("Invalid position option: " + options.position);
+            }
 
             privates.set(this, {
                 active: false
@@ -104,8 +117,12 @@
             return new Wirecloud.ui.MultiValuedSize(this.getWidth(), 1);
         }
 
-        getWidth() {
+        getHeight() {
             return 497;
+        }
+
+        getWidth() {
+            return this.position === "left" || this.position === "right" ? 497 : super.getWidth();
         }
 
         initialize() {
@@ -117,21 +134,46 @@
         }
 
         updatePosition(widget, element) {
-            let offset;
-            if (!this.active) {
-                offset = -this.getWidth() - this.leftMargin + this.dragboard.leftMargin;
-            } else {
-                offset = 0;
-            }
-
-            element.style.top = this.getRowOffset(widget.position) + "px";
-            element.style.bottom = "";
-            if (this.position === "left") {
-                element.style.left = offset + "px";
+            if (this.position === "top" || this.position === "bottom") {
+                let offset;
+                if (!this.active) {
+                    offset = -this.getHeight();
+                } else {
+                    offset = 0;
+                }
+                element.style.left = this.getColumnOffset(widget.position, true);
                 element.style.right = "";
+                if (this.position === "top") {
+                    element.style.top = offset + "px";
+                    element.style.bottom = "";
+                } else {
+                    element.style.bottom = offset + "px";
+                    element.style.top = "";
+                }
+            } else /* if (this.position === "left" || this.position === "right") */ {
+                let offset;
+                if (!this.active) {
+                    offset = -this.getWidth() - this.leftMargin + this.dragboard.leftMargin;
+                } else {
+                    offset = 0;
+                }
+                element.style.top = this.getRowOffset(widget.position, true);
+                element.style.bottom = "";
+                if (this.position === "left") {
+                    element.style.left = offset + "px";
+                    element.style.right = "";
+                } else {
+                    element.style.right = offset + "px";
+                    element.style.left = "";
+                }
+            }
+        }
+
+        getHeightInPixels(cells) {
+            if (this.position === "top" || this.position === "bottom") {
+                return this.getHeight();
             } else {
-                element.style.right = offset + "px";
-                element.style.left = "";
+                return super.getHeightInPixels(cells);
             }
         }
 
@@ -154,8 +196,8 @@
 
         privates.get(this).active = newstatus;
 
-        let position = this.active ? this.position : OPPOSITE[this.position];
-        this.handleicon.className = "fas fa-caret-" + position;
+        let icon = this.active ? ICON[this.position] : OPPOSITE[this.position];
+        this.handleicon.className = "fas fa-caret-" + icon;
 
         this._notifyWindowResizeEvent(true, true);
     };
