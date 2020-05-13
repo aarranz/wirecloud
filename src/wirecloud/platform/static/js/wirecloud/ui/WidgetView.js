@@ -278,6 +278,9 @@
             case 3:
                 layout = tab.dragboard.rightLayout;
                 break;
+            case 4:
+                layout = tab.dragboard.bottomLayout;
+                break;
             }
         }
         layout.addWidget(this, true);
@@ -622,7 +625,8 @@
                 this.tab.dragboard.baseLayout,
                 this.tab.dragboard.freeLayout,
                 this.tab.dragboard.leftLayout,
-                this.tab.dragboard.rightLayout
+                this.tab.dragboard.rightLayout,
+                this.tab.dragboard.bottomLayout
             ];
 
             var data = {

@@ -166,14 +166,15 @@
         return height + this.topMargin + this.bottomMargin;
     };
 
-    ColumnLayout.prototype.getColumnOffset = function getColumnOffset(position) {
+    ColumnLayout.prototype.getColumnOffset = function getColumnOffset(position, css) {
         var tmp = Math.floor((this.getWidth() * this.fromHCellsToPercentage(position.x)) / 100);
         tmp += this.leftMargin + this.dragboard.leftMargin;
-        return tmp;
+        return css ? tmp + 'px' : tmp;
     };
 
-    ColumnLayout.prototype.getRowOffset = function getRowOffset(position) {
-        return this.dragboard.topMargin + this.fromVCellsToPixels(position.y) + this.topMargin;
+    ColumnLayout.prototype.getRowOffset = function getRowOffset(position, css) {
+        let offset = this.dragboard.topMargin + this.fromVCellsToPixels(position.y) + this.topMargin;
+        return css ? offset + 'px' : offset;
     };
 
     ColumnLayout.prototype._notifyWindowResizeEvent = function _notifyWindowResizeEvent(widthChanged, heightChanged) {
